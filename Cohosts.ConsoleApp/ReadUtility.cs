@@ -1,15 +1,17 @@
-﻿using System;
+﻿using Cohosts.Lib;
+using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cohosts.Lib;
 
 namespace Cohosts.ConsoleApp
 {
     class ReadUtility
     {
+        /// <summary>
+        /// Show existing records
+        /// </summary>
+        /// <param name="hostsFile">Path of the Hosts file. Leave empty to use default.</param>
+        /// <param name="hostName">Host name to show</param>
+        /// <param name="ipAddress">IP Address to show</param>
         internal static void ShowRecords(string hostsFile, string hostName, string ipAddress)
         {
             HostsDocument doc = new HostsDocument(hostsFile);

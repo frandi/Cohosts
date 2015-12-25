@@ -47,8 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Arguments.cs" />
-    <Compile Include="CommandArgument.cs" />
+    <Compile Include="ArgumentKeys.cs" />
+    <Compile Include="ArgumentValues.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="ConsoleUtility.cs" />
     <Compile Include="Program.cs" />

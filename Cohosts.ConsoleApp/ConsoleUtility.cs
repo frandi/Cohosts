@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cohosts.ConsoleApp
 {
@@ -11,9 +7,14 @@ namespace Cohosts.ConsoleApp
     {
         private const string DEFAULT_HOSTS_FILE = @"C:\Windows\System32\drivers\etc\hosts";
 
-        internal static CommandArgument ParseArguments(string[] args)
+        /// <summary>
+        /// Parse given arguments
+        /// </summary>
+        /// <param name="args">Arguments</param>
+        /// <returns></returns>
+        internal static ArgumentValues ParseArgumentValues(string[] args)
         {
-            CommandArgument cmdArg = new CommandArgument();
+            ArgumentValues cmdArg = new ArgumentValues();
 
             bool expectingValue = false;
             string expectingValueFor = "";
@@ -22,24 +23,37 @@ namespace Cohosts.ConsoleApp
                 // first argument must be a command
                 if (i == 0)
                 {
-                    cmdArg.Command = args[i].ToLower();
+                    switch (args[i].ToLower())
+                    {
+                        case Commands.ADD:
+                        case Commands.REMOVE:
+                        case Commands.SHOW:
+                            cmdArg.Command = args[i].ToLower();
+                            break;
+                        default:
+                            throw new Exception("Command is missing.");
+                    }
+                    
                     continue;
                 }
 
                 // argument value
                 if (expectingValue)
                 {
-                    switch (expectingValueFor)
+                    if (!args[i].StartsWith("-"))
                     {
-                        case Arguments.ARG_IP_ADDRESS:
-                            cmdArg.IPAddress = args[i].ToLower();
-                            break;
-                        case Arguments.ARG_HOSTS_FILE:
-                            cmdArg.HostsFile = args[i].ToLower();
-                            break;
-                        case Arguments.ARG_HOST_NAME:
-                            cmdArg.HostName = args[i].ToLower();
-                            break;
+                        switch (expectingValueFor)
+                        {
+                            case ArgumentKeys.ARG_IP_ADDRESS:
+                                cmdArg.IPAddress = args[i].ToLower();
+                                break;
+                            case ArgumentKeys.ARG_HOSTS_FILE:
+                                cmdArg.HostsFile = args[i].ToLower();
+                                break;
+                            case ArgumentKeys.ARG_HOST_NAME:
+                                cmdArg.HostName = args[i].ToLower();
+                                break;
+                        }
                     }
 
                     expectingValue = false;
@@ -53,10 +67,10 @@ namespace Cohosts.ConsoleApp
                 {
                     switch (args[i].ToLower())
                     {
-                        case Arguments.ARG_ALLOW_DUPLICATE:
+                        case ArgumentKeys.ARG_ALLOW_DUPLICATE:
                             cmdArg.AllowDuplicateHostName = true;
                             break;
-                        case Arguments.ARG_BACKUP_FILE:
+                        case ArgumentKeys.ARG_BACKUP_FILE:
                             cmdArg.BackupHostsFile = true;
                             break;
                         default:
@@ -73,6 +87,9 @@ namespace Cohosts.ConsoleApp
             return cmdArg;
         }
 
+        /// <summary>
+        /// Show help
+        /// </summary>
         internal static void ShowHelp()
         {
             string progName = Assembly.GetEntryAssembly().GetName().Name;
@@ -87,17 +104,21 @@ namespace Cohosts.ConsoleApp
             Console.WriteLine();
             Console.WriteLine("ARGUMENTS:");
             Console.WriteLine(" Key - Value Arguments:");
-            Console.WriteLine($"\t{Arguments.ARG_IP_ADDRESS}\t: Define IP Address");
-            Console.WriteLine($"\t{Arguments.ARG_HOSTS_FILE}\t: Define the Hosts file path (Optional)");
-            Console.WriteLine($"\t{Arguments.ARG_HOST_NAME}\t: Define Host Name");
+            Console.WriteLine($"\t{ArgumentKeys.ARG_IP_ADDRESS}\t: Define IP Address");
+            Console.WriteLine($"\t{ArgumentKeys.ARG_HOSTS_FILE}\t: Define the Hosts file path (Optional)");
+            Console.WriteLine($"\t{ArgumentKeys.ARG_HOST_NAME}\t: Define Host Name");
             Console.WriteLine(" Key Only Arguments (boolean):");
-            Console.WriteLine($"\t{Arguments.ARG_ALLOW_DUPLICATE}\t: Allow duplicate host name (for ADD command)");
-            Console.WriteLine($"\t{Arguments.ARG_BACKUP_FILE}\t: Create backup before modifying hosts file (for ADD/REMOVE command)");
+            Console.WriteLine($"\t{ArgumentKeys.ARG_ALLOW_DUPLICATE}\t: Allow duplicate host name (for ADD command)");
+            Console.WriteLine($"\t{ArgumentKeys.ARG_BACKUP_FILE}\t: Create backup before modifying hosts file (for ADD/REMOVE command)");
             Console.WriteLine();
             Console.WriteLine("EXAMPLE:");
-            Console.WriteLine($"\t{progName} {nameof(Commands.SHOW)} {Arguments.ARG_IP_ADDRESS} 127.0.0.1");
+            Console.WriteLine($"\t{progName} {nameof(Commands.SHOW)} {ArgumentKeys.ARG_IP_ADDRESS} 127.0.0.1");
         }
 
+        /// <summary>
+        /// Show exception message
+        /// </summary>
+        /// <param name="ex">Exception</param>
         internal static void ShowExceptionMessage(Exception ex)
         {
             Console.WriteLine(ex.Message);

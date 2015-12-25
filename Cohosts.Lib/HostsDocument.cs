@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Cohosts.Lib
 {
     public class HostsDocument
     {
+        #region Private Variables
         private string _hostFile;
-        private List<HostItem> _hostItems;
+        private List<HostItem> _hostItems; 
+        #endregion
 
         #region Constructors
+        /// <summary>
+        /// Instantiate HostsDocument object
+        /// </summary>
+        /// <param name="hostFile">Path of the Hosts file</param>
         public HostsDocument(string hostFile)
         {
             _hostFile = hostFile;
@@ -20,6 +24,9 @@ namespace Cohosts.Lib
         #endregion
 
         #region Public Fields
+        /// <summary>
+        /// List of all records in the Hosts
+        /// </summary>
         public List<HostItem> HostItems
         {
             get
@@ -33,6 +40,13 @@ namespace Cohosts.Lib
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Add a new record to the Hosts
+        /// </summary>
+        /// <param name="hostName">Host Name</param>
+        /// <param name="ipAddress">IP Address</param>
+        /// <param name="allowDuplicateHostName">Allow duplicate host name in the Hosts records</param>
+        /// <returns></returns>
         public bool AddItem(string hostName, string ipAddress, bool allowDuplicateHostName)
         {
             if(string.IsNullOrEmpty(hostName))
@@ -58,11 +72,21 @@ namespace Cohosts.Lib
             return true;
         }
 
+        /// <summary>
+        /// Create backup for the Hosts file in the same location
+        /// </summary>
+        /// <returns></returns>
         public string BackupHostsFile()
         {
             return BackupHostsFile(null, null);
         }
 
+        /// <summary>
+        /// Create backup for the Hosts file
+        /// </summary>
+        /// <param name="backupFileName">Name of the backup file</param>
+        /// <param name="backupLocation">Location of the backup file to be saved</param>
+        /// <returns></returns>
         public string BackupHostsFile(string backupFileName, string backupLocation)
         {
             if (string.IsNullOrEmpty(backupFileName))
@@ -78,16 +102,31 @@ namespace Cohosts.Lib
             return backupFullPath;
         }
         
+        /// <summary>
+        /// Get items by the host name
+        /// </summary>
+        /// <param name="hostName">Host Name filter</param>
+        /// <returns></returns>
         public List<HostItem> GetItemsByHostName(string hostName)
         {
             return GetItems(hostName, null);
         }
 
+        /// <summary>
+        /// Get items by the IP address
+        /// </summary>
+        /// <param name="ipAddress">IP Address filter</param>
+        /// <returns></returns>
         public List<HostItem> GetItemsByIPAddress(string ipAddress)
         {
             return GetItems(null, ipAddress);
         }
 
+        /// <summary>
+        /// Remove existing items by the host name
+        /// </summary>
+        /// <param name="hostName">Host Name filter</param>
+        /// <returns></returns>
         public bool RemoveItemByHostName(string hostName)
         {
             if (string.IsNullOrEmpty(hostName))
@@ -140,6 +179,7 @@ namespace Cohosts.Lib
         }
         #endregion
 
+        #region Private Methods
         private void RefreshHostItems()
         {
             _hostItems = new List<HostItem>();
@@ -177,6 +217,7 @@ namespace Cohosts.Lib
         private bool ItemExists(string hostName)
         {
             return HostItems.Any(h => h.HostName.Equals(hostName, StringComparison.CurrentCultureIgnoreCase));
-        }
+        } 
+        #endregion
     }
 }

@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cohosts.Lib;
 
 namespace Cohosts.ConsoleApp
 {
@@ -12,10 +6,12 @@ namespace Cohosts.ConsoleApp
     {
         static void Main(string[] args)
         {
-            CommandArgument cmdArg = ConsoleUtility.ParseArguments(args);
-
             try
             {
+                // parse arguments
+                ArgumentValues cmdArg = ConsoleUtility.ParseArgumentValues(args);
+
+                // do action based on command
                 switch (cmdArg.Command)
                 {
                     case Commands.ADD:
