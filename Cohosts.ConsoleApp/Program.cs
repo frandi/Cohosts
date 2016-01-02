@@ -23,6 +23,9 @@ namespace Cohosts.ConsoleApp
                     case Commands.SHOW:
                         ReadUtility.ShowRecords(cmdArg.HostsFile, cmdArg.HostName, cmdArg.IPAddress);
                         break;
+                    case Commands.VERSION:
+                        ConsoleUtility.ShowVersion();
+                        break;
                     default:
                         ConsoleUtility.ShowHelp();
                         break;

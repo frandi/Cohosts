@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CohostsLib = Cohosts.Lib;
+using System;
 using System.Reflection;
 
 namespace Cohosts.ConsoleApp
@@ -28,6 +29,7 @@ namespace Cohosts.ConsoleApp
                         case Commands.ADD:
                         case Commands.REMOVE:
                         case Commands.SHOW:
+                        case Commands.VERSION:
                             cmdArg.Command = args[i].ToLower();
                             break;
                         default:
@@ -88,6 +90,18 @@ namespace Cohosts.ConsoleApp
         }
 
         /// <summary>
+        /// Show exception message
+        /// </summary>
+        /// <param name="ex">Exception</param>
+        internal static void ShowExceptionMessage(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+
+            if (ex is UnauthorizedAccessException)
+                Console.WriteLine("Please restart the command prompt with \"Run as Administrator\", and run the command again.");
+        }
+
+        /// <summary>
         /// Show help
         /// </summary>
         internal static void ShowHelp()
@@ -101,6 +115,7 @@ namespace Cohosts.ConsoleApp
             Console.WriteLine($"\t{nameof(Commands.ADD)}\t: Add a new record to the Hosts file");
             Console.WriteLine($"\t{nameof(Commands.REMOVE)}\t: Remove a record from the Hosts file");
             Console.WriteLine($"\t{nameof(Commands.SHOW)}\t: Show available records in the Hosts file");
+            Console.WriteLine($"\t{nameof(Commands.VERSION)}\t: Show version of the application");
             Console.WriteLine();
             Console.WriteLine("ARGUMENTS:");
             Console.WriteLine(" Key - Value Arguments:");
@@ -114,17 +129,22 @@ namespace Cohosts.ConsoleApp
             Console.WriteLine("EXAMPLE:");
             Console.WriteLine($"\t{progName} {nameof(Commands.SHOW)} {ArgumentKeys.ARG_IP_ADDRESS} 127.0.0.1");
         }
+        
+        /// <summary>
+        /// Show version of the application
+        /// </summary>
+        internal static void ShowVersion()
+        {
+            Console.WriteLine($"Cohosts v{AppVersion}");
+            Console.WriteLine($"CohostsLib v{CohostsLib.LibUtility.Version}");
+        }
 
         /// <summary>
-        /// Show exception message
+        /// Cohosts app version
         /// </summary>
-        /// <param name="ex">Exception</param>
-        internal static void ShowExceptionMessage(Exception ex)
+        private static string AppVersion
         {
-            Console.WriteLine(ex.Message);
-
-            if (ex is UnauthorizedAccessException)
-                Console.WriteLine("Please restart the command prompt with \"Run as Administrator\", and run the command again.");
+            get { return Assembly.GetEntryAssembly().GetName().Version.ToString(); }
         }
     }
 }

@@ -16,5 +16,10 @@
         /// Command to show existing records in the Hosts
         /// </summary>
         internal const string SHOW = "show";
+
+        /// <summary>
+        /// Command to show version of the application
+        /// </summary>
+        internal const string VERSION = "version";
     }
 }
